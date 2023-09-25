@@ -27,11 +27,11 @@ import java.util.Set;
 @Table(name = "accounts")
 public class Account {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accounts_id_seq")
-    @SequenceGenerator(name = "accounts_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "bigserial")
     private Long id;
 
+    @Column(unique = true)
     private String email;
 
     @Column(name = "hashed_password")
@@ -58,6 +58,8 @@ public class Account {
                                     inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles = new HashSet<>();
 
-//    @Column(columnDefinition = "token")
-//    private String token;
+    private String username;
+
+    private String firstname;
+    private String lastname;
 }

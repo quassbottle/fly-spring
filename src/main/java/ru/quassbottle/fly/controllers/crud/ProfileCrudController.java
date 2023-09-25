@@ -9,11 +9,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/service/profiles")
-public class UserProfileController {
+public class ProfileCrudController {
     private final ProfileService profileService;
 
     @Autowired
-    public UserProfileController(ProfileService profileService) {
+    public ProfileCrudController(ProfileService profileService) {
         this.profileService = profileService;
     }
 

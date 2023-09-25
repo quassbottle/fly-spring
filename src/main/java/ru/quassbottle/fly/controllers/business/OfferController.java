@@ -1,2 +1,4 @@
-package ru.quassbottle.fly.controllers.business;public class OfferController {
+package ru.quassbottle.fly.controllers.business;
+
+public class OfferController {
 }

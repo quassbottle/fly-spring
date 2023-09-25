@@ -1,4 +1,4 @@
-package ru.quassbottle.fly.services.business;
+package ru.quassbottle.fly.services.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -8,6 +8,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import ru.quassbottle.fly.entities.Account;
 
@@ -16,6 +17,7 @@ import java.security.Key;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Collection;
 import java.util.Date;
 
 @Service
@@ -36,26 +38,26 @@ public class JwtProvider {
         this.refreshExpirationInDays = refreshExpirationInDays;
     }
 
-    public String generateAccessToken(@NonNull Authentication authentication) {
+    public String generateAccessToken(@NonNull String subject, Collection<? extends GrantedAuthority> authorities) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant accessExpirationInstant = now.plusMinutes(accessExpirationInMinutes).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
 
         return Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(subject)
                 .setExpiration(accessExpiration)
                 .signWith(this.accessSecret)
-                .claim("roles", authentication.getAuthorities())
+                .claim("roles", authorities)
                 .compact();
     }
 
-    public String generateRefreshToken(@NonNull Authentication authentication) {
+    public String generateRefreshToken(@NonNull String subject) {
         final LocalDateTime now = LocalDateTime.now();
         final Instant accessExpirationInstant = now.plusDays(refreshExpirationInDays).atZone(ZoneId.systemDefault()).toInstant();
         final Date accessExpiration = Date.from(accessExpirationInstant);
 
         return Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(subject)
                 .setExpiration(accessExpiration)
                 .signWith(this.refreshSecret)
                 .compact();

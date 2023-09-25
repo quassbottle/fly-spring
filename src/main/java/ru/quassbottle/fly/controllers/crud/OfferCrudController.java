@@ -9,11 +9,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/service/offers")
-public class OfferController { // todo: rework logic, add validation, authorization layers
+public class OfferCrudController { // todo: rework logic, add validation, authorization layers
     private final OfferService offerService;
 
     @Autowired
-    public OfferController(OfferService offerService) {
+    public OfferCrudController(OfferService offerService) {
         this.offerService = offerService;
     }
 

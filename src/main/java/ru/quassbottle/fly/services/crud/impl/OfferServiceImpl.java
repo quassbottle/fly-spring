@@ -1,10 +1,9 @@
-package ru.quassbottle.fly.services.impl;
+package ru.quassbottle.fly.services.crud.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.quassbottle.fly.entities.Offer;
 import ru.quassbottle.fly.repositories.OfferRepository;
-import ru.quassbottle.fly.services.OfferService;
+import ru.quassbottle.fly.services.crud.OfferService;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +24,7 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public Offer getById(Long id) {
-        return this.offerRepository.getReferenceById(id);
+        return this.offerRepository.findById(id).orElseThrow();
     }
 
     @Override

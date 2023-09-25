@@ -1,4 +1,4 @@
-package ru.quassbottle.fly.services;
+package ru.quassbottle.fly.services.crud;
 
 import ru.quassbottle.fly.entities.Profile;
 
