@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.quassbottle.fly.dto.request.PersonalInfoUpdateDto;
+import ru.quassbottle.fly.dto.response.ProfileCreatedResponse;
 import ru.quassbottle.fly.entities.Account;
 import ru.quassbottle.fly.entities.Profile;
 import ru.quassbottle.fly.helpers.AccountFieldValidator;
@@ -91,10 +92,22 @@ public class AccountManagementServiceImpl implements AccountManagementService {
     }
 
     @Override
-    public boolean createProfile(String email, boolean isWorker) {
+    public ProfileCreatedResponse createProfile(String email, boolean isWorker) {
         Account candidate = this.accountService.findByEmail(email).orElseThrow(() ->
                 new ResponseStatusException(HttpStatusCode.valueOf(400), "Account not found"));
-        candidate.setProfile(Profile.builder().account(candidate).isWorker(isWorker).build());
-        return this.accountService.update(candidate, candidate.getId()) != null;
+
+        if (candidate.getProfile() != null) {
+            throw new ResponseStatusException(HttpStatusCode.valueOf(400), "Profile already exists");
+        }
+
+        candidate.setProfile(Profile.builder().account(candidate).isWorker(isWorker).id(candidate.getId()).build());
+
+        Account accountDb = this.accountService.update(candidate, candidate.getId());
+        Profile profileDb = accountDb.getProfile();
+
+        return ProfileCreatedResponse.builder()
+                .isWorker(profileDb.isWorker())
+                .id(profileDb.getId())
+                .build();
     }
 }
